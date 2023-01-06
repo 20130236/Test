@@ -151,7 +151,7 @@ public class UserDAO {
     }
 
     public static List<UserModel> findAll() {
-        List<UserModel> users = null;
+        List<UserModel> users ;
         ResultSet rs;
         PreparedStatement pst;
         String sql;
