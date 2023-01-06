@@ -57,10 +57,16 @@ public class UserService {
     }
 
     public static void save(UserModel user) {
+        user.setPassWord(hashPassword(user.getPassWord()));
         UserDAO.save(user);
     }
 
-    public static void updateAdmin(UserModel user) {
+    public static void updateAdmin(UserModel user,String enable) {
+        if(enable.equals("on")){
+            user.setEnable(1);
+        } else{
+            user.setEnable(0);
+        }
         UserDAO.updateUserAdmin(user);
     }
 

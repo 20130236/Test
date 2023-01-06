@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Thêm user</title>
+    <title>Sửa user</title>
     <jsp:include page="/common/admin/css.jsp"></jsp:include>
     <style>
         .button-switch {
@@ -88,8 +88,13 @@
         .button-switch .switch:checked ~ .lbl-on {
             opacity: 1;
         }
-        .button-switch .switch#switch-orange:checked:before {
+        .button-switch .switch#switch:checked:before {
             background: #28a745;
+        }
+
+        .error{
+            float: left !important;
+            color:#dc3545 !important;
         }
     </style>
 </head>
@@ -134,8 +139,11 @@
                                 </div>
                             </div>
                             <div class="card-body" style="display: block; padding:0px ;">
-                                <form action="<c:url value="/data-user"/>" method="post" id="form">
+                                <form action="<c:url value="/data-user?action=edit&id=<%=user.getId()%>"/>" method="post" id="edit-user">
                                     <div class="card-body">
+                                        <c:if test="${success != null}">
+                                            <div class="alert-success" style="width: 36%;">${success}</div>
+                                        </c:if>
                                             <div style="display: flex" class="row">
                                                 <div class="form-group col-md-6 ">
                                                     <div class="form-group">
@@ -165,7 +173,7 @@
                                             <div class="form-group col-md-6 ">
                                                 <div class="form-group">
                                                     <span>Quyền</span>
-                                                    <select class="form-control" id="select-role">
+                                                    <select class="form-control" id="select-role" name="role">
                                                         <option value="0" >User</option>
                                                         <option value="1" >Mod</option>
                                                         <option value="2" >Admin</option>
@@ -175,11 +183,12 @@
                                             <div class="form-group col-md-6 ">
                                                 <div class="form-group">
                                                     <div class="button-switch">
-                                                        <input type="checkbox" id="switch-orange" class="switch" />
-                                                        <label for="switch-orange" class="lbl-off">Khoá</label>
-                                                        <label for="switch-orange" class="lbl-on">Mở</label>
+                                                        <input type="checkbox" id="switch" class="switch" name="enable" />
+                                                        <label for="switch" class="lbl-off">Khoá</label>
+                                                        <label for="switch" class="lbl-on">Mở</label>
                                                     </div>
                                                 </div>
+                                                <input type="hidden" id="enable" name="enable" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -191,13 +200,12 @@
                     </div>
 
                     <div class="card-footer row" style="width: 100%;">
-                        <button type="submit" class="btn btn-primary" form="form" >Lưu thông tin</button>
+                        <button type="submit" class="btn btn-primary" form="edit-user" >Lưu thông tin</button>
                     </div>
                 </div>
                 <!-- /.row -->
             </div><!-- /.container-fluid -->
         </section>
-
 
         <!-- /.content -->
     </div>
@@ -207,15 +215,25 @@
 </div>
 <jsp:include page="/common/admin/js.jsp"></jsp:include>
 <script type="text/javascript">
-    var enable = "<%=String.valueOf(user.getEnable())%>"
-    var role = "<%=String.valueOf(user.getRole())%>"
+    var enable = "<%=user.getEnable()%>"
+    var role = "<%=user.getRole()%>"
 
     if("1" === enable ){
-        $("#switch-orange").prop('checked', true);
+        $("#switch").prop('checked', true);
     }
+
+
 
     $('#select-role option[value=role]').attr('selected','selected');
     $("#select-role").val(role).change();
+
+    $(document).ready(function() {
+        if ($('#switch').prop('checked')) {
+            $(enable).val(1);
+        } else {
+            $(enable).val(0);
+        }
+    })
 
     $.validator.setDefaults({
         errorElement: "label",
@@ -223,7 +241,23 @@
     });
 
     +(function ($) {
-        $("#customer-form").validate({
+      /*  $("#edit-user").submit(function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var actionUrl = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: actionUrl,
+                data: form.serialize(),
+                success: function () {
+                    alert( "Thêm thành công" );
+                },
+                error: function (error){
+                    console.log(error);
+                }
+            });
+        });*/
+        $("#edit-user").validate({
             rules: {
                 username: {
                     required : true

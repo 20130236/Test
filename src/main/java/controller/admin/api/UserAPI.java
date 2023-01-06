@@ -34,7 +34,7 @@ public class UserAPI extends HttpServlet {
             ObjectMapper mapper = new ObjectMapper();
             response.setContentType("application/json");
             UserModel user = HttpUtil.of(request.getReader()).toModel(UserModel.class); //json to model
-            UserService.updateAdmin(user);
+            UserService.updateAdmin(user,"");
             mapper.writeValue(response.getOutputStream(), user);
         }
 

@@ -5,6 +5,7 @@
 <%
   List<UserModel> users = (List<UserModel>) request.getAttribute("users");
 %>
+<c:url var="UrlAction" value="/data-user?action=delete"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,9 +61,10 @@
 
               <!-- /.card-header -->
               <div class="card-body">
-
+                <c:if test="${success != null}">
+                  <div class="alert-success" style="width: 36%;">${success}</div>
+                </c:if>
                 <table id="example1" class="table table-bordered table-striped">
-
                   <thead>
                   <tr>
                     <th>Tên tài khoản</th>
@@ -90,8 +92,8 @@
                     <td> khoá</td>
                     <% } %>
                     <td>
-                      <a class="btn btn-danger" href="data-user?action=delete&id=<%=user.getId()%>">Xoá </a>
-                      <a class="btn btn-success" href="data-user?action=update&id=<%=user.getId()%>">Sửa </a>
+                      <a class="btn btn-danger" id="delete" href="data-user?action=delete&id=<%=user.getId()%>">Xoá </a>
+                      <a class="btn btn-success"  href="data-user?action=edit&id=<%=user.getId()%>">Sửa </a>
                     </td>
                   </tr>
                   <% } %>
@@ -126,5 +128,21 @@
 <!-- ./wrapper -->
 
 <jsp:include page="/common/admin/js.jsp"></jsp:include>
+<script>
+ /* $('#delete').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: '${UrlAction}',
+      data: form.serialize(),
+      success: function () {
+        alert( "Xoá thành công" );
+      },
+      error: function (error){
+        console.log(error);
+      }
+    });
+  });*/
+</script>
 </body>
 </html>
